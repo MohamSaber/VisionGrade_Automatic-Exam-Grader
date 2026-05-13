@@ -1,59 +1,217 @@
 # VisionGrade — Automatic Exam Answer Sheet Grader
-### Text Image Preprocessing & Enhancement Pipeline
+
+AI-powered handwritten exam grading system built using Computer Vision, OCR, and fuzzy text matching.
 
 ---
 
-## What it does
-Takes a **noisy text image** as input and outputs a **step-by-step visualization** showing every enhancement stage plus the final clean image.
+# Overview
+
+VisionGrade is an end-to-end system that automatically processes handwritten answer sheets, extracts answers using OCR, and grades them against a teacher-provided answer key.
+
+The project combines:
+
+- Image enhancement from scratch using NumPy
+- OCR-based handwriting recognition
+- Intelligent answer parsing
+- Fuzzy matching for OCR error tolerance
+- Automatic grading and score generation
+- Interactive Streamlit web interface
 
 ---
 
-## CV Techniques Used
+# Features
 
-| Rule | Stage | Technique |
-|------|-------|-----------|
-| Rule 2 | Stage 2 | Gaussian Filter — removes blur and Gaussian noise |
-| Rule 2 | Stage 3 | Mean Filter — removes salt-and-pepper noise |
-| Rule 2 | Stage 4 | Low-pass FFT Filter — removes periodic noise |
-| Rule 2 | Stage 5 | CLAHE — fixes uneven lighting |
-| Rule 2 | Stage 6 | Contrast Stretching + Gamma Correction |
-| Rule 2 | Stage 7 | Deskew — corrects rotation/tilt |
-| Rule 1 | Stage 8a | Sobel Edge Detection |
-| Rule 1 | Stage 8b | Prewitt Edge Detection |
-| Rule 1 | Stage 8c | Canny Edge Detection |
-| Both   | Stage 9 | Otsu Thresholding — final clean binary image |
+- Handwritten answer sheet grading
+- OCR-based text recognition
+- Image preprocessing and enhancement pipeline
+- Adaptive thresholding and noise removal
+- Automatic skew correction (deskewing)
+- Fuzzy answer matching for OCR mistakes
+- Streamlit web application UI
+- Modular architecture for easy extension
 
 ---
 
-## Setup & Run
+# System Pipeline
 
-```bash
-pip install -r requirements.txt
-
-# Run on your own image
-python enhancer.py input/your_image.jpg
-
-# Run demo (creates synthetic noisy image automatically)
-python enhancer.py
+```text
+Input Answer Sheet
+        ↓
+Image Enhancement Pipeline
+        ↓
+OCR Text Recognition
+        ↓
+Question & Answer Parsing
+        ↓
+Fuzzy Matching Against Answer Key
+        ↓
+Automatic Grade Report
 ```
 
 ---
 
-## Output
+# Image Enhancement Pipeline
 
-All results saved to `output/` folder:
+The preprocessing pipeline is implemented almost entirely from scratch using NumPy.
 
-| File | What it shows |
-|------|--------------|
-| `pipeline_all_stages.jpg` | Full step-by-step grid (main output) |
-| `01_original.jpg` | Original noisy input |
-| `02_gaussian.jpg` | After Gaussian filter |
-| `03_mean.jpg` | After Mean filter |
-| `04_lowpass_fft.jpg` | After Low-pass FFT filter |
-| `05_clahe.jpg` | After CLAHE lighting fix |
-| `06_contrast_gamma.jpg` | After contrast + gamma |
-| `07_deskewed.jpg` | After rotation correction |
-| `08a_sobel.jpg` | Sobel edge map |
-| `08b_prewitt.jpg` | Prewitt edge map |
-| `08c_canny.jpg` | Canny edge map |
-| `09_final_binary.jpg` | Final clean binary image |
+## Stages
+
+1. Grayscale Conversion
+2. Deskew / Rotation Correction
+3. Median + Gaussian Noise Removal
+4. Background Lighting Normalization
+5. Adaptive Thresholding
+6. Small Component Removal
+7. Morphological Cleanup
+
+---
+
+# OCR & Grading
+
+The system uses RapidOCR for handwriting recognition and applies multiple matching strategies to handle OCR imperfections.
+
+## Matching Strategies
+
+- Exact match
+- Normalized text match
+- OCR confusion matching
+- Levenshtein edit distance
+- Partial containment matching
+
+This allows the system to correctly handle common OCR mistakes such as:
+
+```text
+0 ↔ o
+1 ↔ l ↔ i
+5 ↔ s
+8 ↔ b
+```
+
+---
+
+# Technologies Used
+
+- Python
+- NumPy
+- RapidOCR
+- Pillow
+- Streamlit
+- ONNX Runtime
+
+---
+
+# Project Structure
+
+```text
+VisionGrade-AI/
+│
+├── app.py
+├── main.py
+├── grader.py
+├── ocr_engine.py
+├── scratch_image.py
+│
+├── requirements.txt
+├── README.md
+├── sample_answer_key.txt
+├── .gitignore
+│
+├── docs/
+│   └── Exam_Grader_Report.pdf
+│
+├── samples/
+│   ├── test1.jpeg
+│   ├── test2.jpeg
+│   ├── test3.png
+│   ├── test1_enhanced.jpg
+│   └── test2_enhanced.jpg
+```
+
+---
+
+# Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# Run the Application
+
+```bash
+streamlit run app.py
+```
+
+---
+
+# Sample Answer Key Format
+
+```text
+Q1: apple
+Q2: 1423
+Q3: Cairo
+Q4: blue
+Q5: 99
+```
+
+---
+
+# Example Workflow
+
+1. Upload a handwritten answer sheet.
+2. The system enhances and cleans the image.
+3. OCR extracts handwritten answers.
+4. Answers are parsed and matched.
+5. A final grade report is generated automatically.
+
+---
+
+# Screenshots
+
+## Original Input
+
+![Original Input](samples/test2.jpeg)
+
+## Enhanced Output
+
+![Enhanced Output](samples/test2_enhanced.jpg)
+
+## Grading Interface
+
+_Add screenshot here_
+
+![Interface](interface_scrn.png)
+
+# Future Improvements
+
+- Better multilingual handwriting support
+- Deep-learning-based handwritten OCR
+- Exportable PDF grade reports
+- Cloud deployment
+- Real-time webcam grading
+- Student analytics dashboard
+
+---
+
+# Authors
+
+- Mohamed Saber Labib Mostafa
+- Team Members
+
+---
+
+# Academic Report
+
+A detailed technical report explaining the architecture, algorithms, preprocessing pipeline, OCR integration, and grading logic is included in:
+
+```text
+docs/Exam_Grader_Report.pdf
+```
+
+---
+
+# License
+
+This project is intended for educational and research purposes.
+
