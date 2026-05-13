@@ -1,0 +1,5 @@
+Q1: Mango
+Q2: 2718
+Q3: Delhi
+Q4: yellow
+Q5: 42
